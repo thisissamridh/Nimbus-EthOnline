@@ -28,3 +28,42 @@ interface INFTWarranty {
 
     function burn(uint256 tokenId) external;
 }
+
+contract NFTResolver {
+    function checkUpkeep(address contract_add)
+        external
+        view
+        returns (bool canExec, bytes memory execPayload)
+    // returns(uint256 []  memory arr)
+    {
+        uint256[] memory ans = INFTWarranty(contract_add).getSellers();
+        for (uint256 i = 0; i < ans.length; i++) {
+
+            for (uint256 j = 0; j <  INFTWarranty(contract_add).getSellerNFTSize(ans[i]); j++) {
+                //uint256 creationTime =  INFTWarranty(contract_add).getCreation(ans[i],nfts[i]);
+                if (
+                    (INFTWarranty(contract_add).getExpiry(ans[i],INFTWarranty(contract_add).getSellerNFT(ans[i],j) ) <
+                        block.timestamp) &&
+                    (INFTWarranty(contract_add).getStatus(ans[i], INFTWarranty(contract_add).getSellerNFT(ans[i],j)) == 2)
+                ) {
+                    execPayload = abi.encodeWithSelector(
+                        INFTWarranty.burn.selector,
+                        uint256(INFTWarranty(contract_add).getSellerNFT(ans[i],j))
+                    );
+                    return (true, execPayload);
+                }
+                // if (
+                //     INFTWarranty(contract_add).getExpiry(ans[i], INFTWarranty(contract_add).getSellerNFT(ans[i],j)) >
+                //     block.timestamp ||
+                //     INFTWarranty(contract_add).getStatus(ans[i], INFTWarranty(contract_add).getSellerNFT(ans[i],j)) ==
+                //     0 ||
+                //     INFTWarranty(contract_add).getStatus(ans[i], INFTWarranty(contract_add).getSellerNFT(ans[i],j)) ==
+                //     1 ||
+                //     INFTWarranty(contract_add).getStatus(ans[i], INFTWarranty(contract_add).getSellerNFT(ans[i],j)) == 3
+                // ) {
+                //     return (false, bytes("Session is ongoing"));
+                // }
+            }
+        }
+    }
+}
