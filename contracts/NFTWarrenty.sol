@@ -102,3 +102,72 @@ uint256 [] public totalSellers;
       tokenURIList[sellerId][Id]=tokenURI;
         
     }
+function resell(address to,uint256 tokenId,uint256 sellerId)public{
+       require( ownerOf(tokenId)==msg.sender,"Not Owner");
+      sellerWarrantyDetails[sellerId][tokenId].verifyHash = keccak256(abi.encode(to, sellerWarrantyDetails[sellerId][tokenId].productId));
+      sellerWarrantyDetails[sellerId][tokenId].buyers.push(to);
+      sellerWarrantyDetails[sellerId][tokenId].buyersDate.push(block.timestamp);
+
+            _transfer(msg.sender,to,tokenId);
+    }
+
+       function burn(uint256 tokenId)external{
+        uint256 sellerId = tokenId/1000000;
+        require(block.timestamp>=sellerWarrantyDetails[sellerId][tokenId].expiry);
+        _burn(tokenId);
+        sellerWarrantyDetails[sellerId][tokenId].status =  NFTStatus.Expired;
+
+    }
+
+
+    //READ Functions
+
+    
+ 
+    function getSellerNFTs(uint256 sellerId) external view returns(uint256[]memory){
+        return allSellers[sellerId].allNFTs;
+    }
+
+    function getSellers() external view returns(uint256[]memory){
+        return totalSellers;
+    }
+    function getExpiry (uint256 sellerId,uint256 tokenId)external view returns (uint256 expiry){
+        return sellerWarrantyDetails[sellerId][tokenId].expiry;
+    }
+      function getCreation (uint256 sellerId,uint256 tokenId)external view returns (uint256 creation){
+        return sellerWarrantyDetails[sellerId][tokenId].creationTime;
+    }
+    function getSellerWarrantyDetails(uint256 sellerId,uint256 tokenId)public view returns(warrantyDetails memory){
+        return sellerWarrantyDetails[sellerId][tokenId] ;
+
+    }
+     function getBuyersCollection(address add,uint256 index)public view returns(uint256){
+        return buyersCollection[add][index];
+     }
+
+      function getStatus (uint256 sellerId,uint256 tokenId)external view returns (uint256 stat){
+       if (sellerWarrantyDetails[sellerId][tokenId].status == NFTStatus.Pending)
+       {
+        return 0;
+       }
+       if (sellerWarrantyDetails[sellerId][tokenId].status == NFTStatus.Verified){
+        return 1;
+       }
+        if (sellerWarrantyDetails[sellerId][tokenId].status == NFTStatus.Active){
+        return 2;
+       }
+          if (sellerWarrantyDetails[sellerId][tokenId].status == NFTStatus.Expired){
+        return 3;
+       }
+    }
+    function getSellerNFT(uint256 sellerId,uint256 Index)external view returns(uint256){
+        return allSellers[sellerId].allNFTs[Index];
+    }
+    function getSellerNFTSize(uint256 sellerId)external view returns(uint256){
+        return allSellers[sellerId].allNFTs.length;
+    }
+
+
+
+}
+ 
