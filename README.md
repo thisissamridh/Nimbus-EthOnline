@@ -164,8 +164,8 @@ Once a warranty is activated by a owner in their dashboard the warranty also sho
 <img src="https://res.cloudinary.com/dgy8ybeoy/image/upload/v1659308834/NFTDocket_aeca19.png" alt="Block Diagram" width="100%">
 
 ## Screenshots
-![IMG_1](https://user-images.githubusercontent.com/90990378/229328649-3b3380df-a946-48b6-9a0d-e2e94e258100.png)
-![IMG_2](https://user-images.githubusercontent.com/90990378/229328654-151e3a1a-1f34-4c8d-a37e-72a2edf4cf7d.png)
+![IMG_1](https://user-images.githubusercontent.com/69411088/277184283-a97b78be-3cc2-4dab-8efd-2bfeb5198582.png)
+![IMG_2](https://user-images.githubusercontent.com/69411088/277184319-9417c41f-383c-401f-b18c-b0fadeb46f04.png)
 
 ## Future Scope
 
